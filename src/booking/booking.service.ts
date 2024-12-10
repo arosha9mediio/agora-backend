@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Booking } from './booking.entity';
 import { CreateBookingDto } from './bookingDto';
 
@@ -25,4 +25,20 @@ export class BookingService {
   async getBookings(): Promise<Booking[]> {
     return this.bookingRepository.find();
   }
+  async getTodaysBookings(doctorId: string): Promise<Booking[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of the day
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1); // Start of the next day
+
+    return this.bookingRepository.find({
+      where: {
+        doctorId,
+        bookingDate: Between(
+          today.toISOString().split('T')[0],
+          tomorrow.toISOString().split('T')[0],
+        ),
+      },
+      select: ['patientId', 'channelName', 'bookingTime'], // Select only required fields
+    });}
 }
