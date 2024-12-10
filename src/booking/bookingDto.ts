@@ -9,9 +9,9 @@ export class CreateBookingDto {
   @IsNotEmpty()
   patientId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  channelName: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // channelName: string;
 
   @IsDateString()
   @IsNotEmpty()

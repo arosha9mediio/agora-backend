@@ -12,7 +12,13 @@ export class BookingService {
   ) {}
 
   async createBooking(createBookingDto: CreateBookingDto): Promise<Booking> {
-    const booking = this.bookingRepository.create(createBookingDto);
+    const channelName = `${createBookingDto.patientId}_${createBookingDto.doctorId}`;
+    const booking = this.bookingRepository.create({
+      ...createBookingDto,
+      channelName,
+    });
+
+ 
     return await this.bookingRepository.save(booking);
   }
 
