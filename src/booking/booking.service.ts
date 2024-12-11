@@ -26,19 +26,15 @@ export class BookingService {
     return this.bookingRepository.find();
   }
   async getTodaysBookings(doctorId: string): Promise<Booking[]> {
+    // 
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Start of the day
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1); // Start of the next day
+  const formattedToday = today.toISOString().split('T')[0]; // Get YYYY-MM-DD format
 
-    return this.bookingRepository.find({
-      where: {
-        doctorId,
-        bookingDate: Between(
-          today.toISOString().split('T')[0],
-          tomorrow.toISOString().split('T')[0],
-        ),
-      },
-      select: ['patientId', 'channelName', 'bookingTime'], // Select only required fields
+  return this.bookingRepository.find({
+    where: {
+      doctorId,
+      bookingDate: formattedToday, // Compare directly with the formatted date
+    },
+      select: ['patientId', 'channelName', 'bookingTime', 'bookingDate', 'paymentStatus'], // Select only required fields
     });}
 }
